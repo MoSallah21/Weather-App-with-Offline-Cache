@@ -24,12 +24,12 @@ class WeatherRepositoryImpl implements WeatherRepository {
     final hasConnection = await connectivityService.isConnected;
 
     if (!hasConnection) {
-      final cached = await localDataSource.getCachedWeather();
+      final cached = await localDataSource.getCachedWeatherForCity(cityName);
       if (cached != null) {
         return (weather: cached, isFromCache: true);
       }
       throw const NetworkException(
-        'No internet connection and no cached data available.',
+        'No internet connection and no cached data for this city.',
       );
     }
 
@@ -38,20 +38,15 @@ class WeatherRepositoryImpl implements WeatherRepository {
       await localDataSource.cacheWeather(model);
       return (weather: model, isFromCache: false);
     } on NetworkException {
-      final cached = await localDataSource.getCachedWeather();
+      final cached = await localDataSource.getCachedWeatherForCity(cityName);
       if (cached != null) {
         return (weather: cached, isFromCache: true);
       }
       rethrow;
-    } on CityNotFoundException {
-      rethrow;
-    } on RateLimitException {
-      rethrow;
-    } on ServerException {
-      rethrow;
-    } on CacheException {
-      rethrow;
-    }
+    } on CityNotFoundException { rethrow; }
+    on RateLimitException { rethrow; }
+    on ServerException { rethrow; }
+    on CacheException { rethrow; }
   }
 
   @override

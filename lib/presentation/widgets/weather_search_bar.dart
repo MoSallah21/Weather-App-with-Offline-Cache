@@ -66,10 +66,19 @@ class _WeatherSearchBarState extends State<WeatherSearchBar> {
         hintText: 'Search city...',
         prefixIcon: const Icon(Icons.search_rounded),
         suffixIcon: widget.enabled
-            ? IconButton(
-          icon: const Icon(Icons.arrow_forward_rounded),
-          onPressed: _submit,
-          tooltip: 'Search',
+            ? ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _controller,
+          builder: (context, value, _) {
+            if (value.text.isEmpty) return const SizedBox.shrink();
+            return IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () {
+                _controller.clear();
+                _focusNode.requestFocus();
+              },
+              tooltip: 'Clear',
+            );
+          },
         )
             : const SizedBox(
           width: 48,

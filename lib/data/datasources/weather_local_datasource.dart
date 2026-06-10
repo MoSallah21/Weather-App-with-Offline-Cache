@@ -6,6 +6,7 @@ import '../models/weather_model.dart';
 
 abstract class WeatherLocalDataSource {
   Future<WeatherModel?> getCachedWeather();
+  Future<WeatherModel?> getCachedWeatherForCity(String cityName);
   Future<void> cacheWeather(WeatherModel weather);
   Future<List<String>> getRecentSearches();
   Future<void> saveRecentSearch(String cityName);
@@ -33,15 +34,6 @@ class WeatherLocalDataSourceImpl implements WeatherLocalDataSource {
     }
   }
 
-  @override
-  Future<void> cacheWeather(WeatherModel weather) async {
-    try {
-      final jsonString = json.encode(weather.toJson());
-      await weatherBox.put(AppConstants.cachedWeatherKey, jsonString);
-    } catch (e) {
-      throw CacheException('Failed to cache weather data: $e');
-    }
-  }
 
   @override
   Future<List<String>> getRecentSearches() async {
@@ -75,6 +67,31 @@ class WeatherLocalDataSourceImpl implements WeatherLocalDataSource {
       await recentSearchesBox.put(AppConstants.recentSearchesKey, jsonString);
     } catch (e) {
       throw CacheException('Failed to save recent search: $e');
+    }
+  }
+
+  @override
+  Future<WeatherModel?> getCachedWeatherForCity(String cityName) async {
+    try {
+      final key = 'weather_${cityName.toLowerCase().trim()}';
+      final jsonString = weatherBox.get(key) as String?;
+      if (jsonString == null) return null;
+      final jsonMap = json.decode(jsonString) as Map<String, dynamic>;
+      return WeatherModel.fromCacheJson(jsonMap);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> cacheWeather(WeatherModel weather) async {
+    try {
+      final jsonString = json.encode(weather.toJson());
+      final cityKey = 'weather_${weather.cityName.toLowerCase().trim()}';
+      await weatherBox.put(cityKey, jsonString);
+      await weatherBox.put(AppConstants.cachedWeatherKey, jsonString);
+    } catch (e) {
+      throw CacheException('Failed to cache weather data: $e');
     }
   }
 }
