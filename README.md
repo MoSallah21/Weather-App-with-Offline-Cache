@@ -48,7 +48,7 @@ https://drive.google.com/file/d/1mj_ph79-NMjUI9z32YCccFSWhblx0IhA/view
 
 ## 📦 APK Download
 
-https://drive.google.com/file/d/1MLmObyh5mMmsKrb19j7OWQz3h3lG5msG/view
+https://drive.google.com/file/d/1dQ9L8hm8QCh60verJFG2wDSNovkZkkTv/view
 
 ---
 
