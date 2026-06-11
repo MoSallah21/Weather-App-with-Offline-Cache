@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -21,13 +20,12 @@ final GetIt sl = GetIt.instance;
 
 Future<void> setupDependencies() async {
   // External
-  sl.registerLazySingleton<Connectivity>(() => Connectivity());
   sl.registerLazySingleton<NetworkClient>(() => NetworkClient());
   sl.registerLazySingleton<Dio>(() => sl<NetworkClient>().dio);
 
   // Services
   sl.registerLazySingleton<ConnectivityService>(
-        () => ConnectivityServiceImpl(sl<Connectivity>()),
+        () => ConnectivityServiceImpl(),
   );
 
   // Hive Boxes
