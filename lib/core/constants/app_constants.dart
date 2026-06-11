@@ -7,7 +7,7 @@ class AppConstants {
   static const String queryParam = 'q';
   static const String aqi = 'no';
 
-  static const String apiKey = '4a292f4b221640f9aed172028242805';
+  static const String apiKey = 'YOUR_API_KEY';
 
   // Hive
   static const String weatherBoxName        = 'weatherBox';
